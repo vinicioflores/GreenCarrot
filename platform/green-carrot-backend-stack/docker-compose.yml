@@ -1,0 +1,118 @@
+version: '2'
+services:
+    config01:
+        image: mongo
+        command: 'mongod --port 27017 --configsvr --replSet configserver --dbpath /data/configdb'
+        volumes:
+            - './scripts:/scripts'
+    config02:
+        image: mongo
+        command: 'mongod --port 27017 --configsvr --replSet configserver --dbpath /data/configdb'
+        volumes:
+            - './scripts:/scripts'
+    sj01:
+        image: mongo
+        command: 'mongod --port 27018 --shardsvr --replSet repsanjose --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    sj02:
+        image: mongo
+        command: 'mongod --port 27018 --shardsvr --replSet repsanjose --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    ca01:
+        image: mongo
+        command: 'mongod --port 27019 --shardsvr --replSet repcartago  --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    ca02:
+        image: mongo
+        command: 'mongod --port 27019 --shardsvr --replSet repcartago  --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    al01:
+        image: mongo
+        command: 'mongod --port 27020 --shardsvr --replSet repalajuela  --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    al02:
+        image: mongo
+        command: 'mongod --port 27020 --shardsvr --replSet repalajuela  --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    arb01sj:
+        image: mongo
+        command: 'mongod --port 27023 --replSet repsanjose  --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    arb01ca:
+        image: mongo
+        command: 'mongod --port 27024  --replSet repcartago  --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    arb01al:
+        image: mongo
+        command: 'mongod --port 27025  --replSet repalajuela  --dbpath /data/db'
+        volumes:
+            - './scripts:/scripts'
+    router01:
+        image: mongo
+        command: 'mongos --port 27017 --configdb configserver/config01:27017,config02:27017'
+        ports:
+            - '27017:27017'
+        volumes:
+            - './scripts:/scripts'
+        depends_on:
+            - config01
+            - config02
+            - sj01
+            - sj02
+            - ca01
+            - ca02
+            - al01
+            - al02
+    router02:
+        image: mongo
+        command: 'mongos --port 27018 --configdb configserver/config01:27017,config02:27017'
+        ports:
+            - '27018:27018'
+        volumes:
+            - './scripts:/scripts'
+        depends_on:
+            - config01
+            - config02
+            - sj01
+            - sj02
+            - ca01
+            - ca02
+            - al01
+            - al02
+    inv01data:
+        image: 'cassandra:2'
+        container_name: inv01data
+        ports:
+            - 9042:9042
+            - 7199:7199
+    inv02data:
+        image: 'cassandra:2'
+        container_name: inv02data
+        ports: 
+            - 9142:9042
+        links:
+            - inv01data:seed
+        environment:
+            - CASSANDRA_SEEDS=seed
+        depends_on:
+            - inv01data
+    inv03data:
+        image: 'cassandra:2'
+        container_name: inv03data
+        ports: 
+            - 9242:9042
+        links:
+            - inv01data:seed
+        environment:
+            - CASSANDRA_SEEDS=seed
+        depends_on:
+            - inv01data
+            - inv02data
