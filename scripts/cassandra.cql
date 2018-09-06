@@ -42,12 +42,12 @@ CREATE TABLE items_movements (
 	latitude		float, 
 	longitude 		float,  // Cassandra does not support geolocation data types ... will store X/Y for further search in Mongo ...
 	updatetime  	timestamp,
-	movement_type   text,
+	movement_type   uuid,
 	damaged_article boolean,
 	stolen_article  boolean,
 	stakeholder_involved text,   // a consumer name or a provider name - person
 	receipt_or_sale_confirmed_by_stakeholder boolean,   // the confirmation that article was sold to us by the provider - or - delivered to customer
-	receipt_or_sale_confirmation_method text,
+	receipt_or_sale_confirmation_method uuid,
 	cost        	decimal,
 		
 	PRIMARY KEY ((truck,routename), producttype)	
