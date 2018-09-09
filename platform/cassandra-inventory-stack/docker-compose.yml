@@ -1,0 +1,47 @@
+version: '2'
+networks:
+    cassnet:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 10.10.0.0/28
+                  gateway: 10.10.0.1
+services:
+    inv01data:
+        image: 'cassandra:2'
+        container_name: inv01data
+        networks:
+            cassnet:
+                ipv4_address: 10.10.0.2
+        ports:
+            - 9042:9042
+            - 7199:7199
+    inv02data:
+        image: 'cassandra:2'
+        container_name: inv02data
+        networks:
+            cassnet:
+                ipv4_address: 10.10.0.3
+        ports: 
+            - 9142:9042
+        links:
+            - inv01data:seed
+        environment:
+            - CASSANDRA_SEEDS=seed
+        depends_on:
+            - inv01data
+    inv03data:
+        image: 'cassandra:2'
+        container_name: inv03data
+        networks:
+            cassnet:
+                ipv4_address: 10.10.0.4
+        ports: 
+            - 9242:9042
+        links:
+            - inv01data:seed
+        environment:
+            - CASSANDRA_SEEDS=seed
+        depends_on:
+            - inv01data
+            - inv02data
