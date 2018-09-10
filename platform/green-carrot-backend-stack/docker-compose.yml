@@ -119,7 +119,7 @@ services:
             - './scripts:/scripts'
     router01:
         image: mongo
-        command: 'mongos --port 27028 --configdb configserver/config01:27017,config02:27018'
+        command: 'mongos --port 27028 --bind_ip 10.0.0.13 --configdb configserver/config01:27017,config02:27018'
         networks:
             clustnet:
                 ipv4_address: 10.0.0.13
@@ -138,7 +138,7 @@ services:
             - al02
     router02:
         image: mongo
-        command: 'mongos --port 27029 --configdb configserver/config01:27017,config02:27018'
+        command: 'mongos --port 27029 --bind_ip 10.0.0.14 --configdb configserver/config01:27017,config02:27018'
         networks:
             clustnet:
                 ipv4_address: 10.0.0.14

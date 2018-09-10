@@ -1,1 +1,1 @@
-rs.addArb("arb01sj:27023")
+rs.addArb("arb01sj:27025")
