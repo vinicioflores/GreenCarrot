@@ -1,19 +1,22 @@
-version: "3"
-services:
-  web:
-    # replace username/repo:tag with your name and image details
-    image: viniciof1211/green-carrot-exec-flow
-    deploy:
-      replicas: 15
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 50M
-      restart_policy:
-        condition: on-failure
-    ports:
-      - "4050:3000"
-    networks:
-      - webnet
+version: '2'
 networks:
-  webnet:
+    appnet:
+        driver: bridge
+        ipam:
+            config: [{subnet: 10.100.0.0/28, gateway: 10.100.0.1}]
+services:
+    web:
+        image: viniciof1211/green-carrot-exec-flow
+        build: .
+        ports:
+            - '3000:3000'
+        networks:
+            appnet: {ipv4_address: 10.100.0.2}
+    debug:
+        image: viniciof1211/green-carrot-exec-flow
+        build: .
+        command: 'node --inspect-brk=10.100.0.3 .'
+        ports:
+            - '9300:9229'
+        networks:
+            appnet: {ipv4_address: 10.100.0.3}

@@ -3,15 +3,21 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var debug = require('debug')
+var log = debug('app:log')
 
+
+// bind log to console for debugging
+log.log = console.info.bind(console);
+debug.log = console.info.bind(console);
 
 // to connect to MongoDB
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('10.0.0.13:27028/configserver');
+var db = monk('localhost:27028/test');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var routesRouter = require('./routes/routes');
 
 var app = express();
 
@@ -35,7 +41,7 @@ app.use(function(req,res,next){
 
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/routes', routesRouter);
 
 
 
