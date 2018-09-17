@@ -1,8 +1,3 @@
-
-
-
-///---------------- Proyecto GREEN CARROT ----------------
-
 use GreenCarrotRutasDB
 
 db.createCollection("auditLog")
@@ -10,23 +5,23 @@ db.createCollection("auditLog")
 
 db.auditLog.insert({
 	objectId: ObjectId("507f191e810c19729de860ea"),
-	truck: "greenCarrot01", /// ref. from Cassandra,
+	truck: "greenCarrot01", 
 	visitime: new Date(), 
 	routeName: "Estudiantes",
 	location: { type: "Point", coordinates: [ -73.97, 40.77 ] },
 	orderPosition: 1
 
-});
+})
 
 
 db.createCollection("trucks")
 
 db.trucks.insert({
 	truckid: ObjectId("507f191e810c19729de860ea"),
-	name: "greenCarrot01", /// ref. from Cassandra
+	name: "greenCarrot01", 
 	,lastKnownOrderPositionInRoute: 1,
 	assignedRoute: "Estudiantes"
-});
+})
 
 
 db.createCollection("acquisitions")
@@ -44,7 +39,7 @@ db.acquisitions.insert({
 	payment_method: "Cash",
 	payment_amount: 35.000,
 	completed:false
-});
+})
 
 
 db.createCollection("deliveries")
@@ -62,7 +57,7 @@ db.deliveries.insert({
 	payment_method: "Tarjeta Credito",
 	payment_amount: 45.000,
 	completed:false
-});
+})
 
 db.createCollection("routes")
 
@@ -79,7 +74,7 @@ db.routes.insert({
 	currentlyRunning:true,
 	order: 1
 
-});
+})
 
 db.routes.insert({ 
 	city: "San Jose",  
@@ -94,7 +89,7 @@ db.routes.insert({
 	currentlyRunning:true,
 	order: 2
 
-});
+})
 
 db.routes.insert({ 
 	city: "San Jose",  
@@ -107,7 +102,7 @@ db.routes.insert({
 	action: "Wait for consumers to gather around this stop",
 	currentlyRunning:true,
 	order: 3
-});
+})
 
 
 db.routes.insert({ 
@@ -121,14 +116,14 @@ db.routes.insert({
 	action: "Wait for consumers to gather around this stop",
 	currentlyRunning:true,
 	order: 4
-});
+})
 
 
 db.routes.createIndex( { location: "2dsphere", routeName: 1, order: 1 } )
 
 
 
-db.routes.find({ route: "Estudiantes" }).sort({order: 1}) // get all the stops from the route named "Estudiantes" in the exact order it is planned to be traversed by the designated truck
+db.routes.find({ route: "Estudiantes" }).sort({order: 1}) 
 
 
 
@@ -138,7 +133,7 @@ db.routes.find(
        $geoWithin: {
           $geometry: {
              type : "Polygon" ,
-             coordinates: [ [ [ 0, 0 ], [ 3, 6 ], [ 6, 1 ], [ 0, 0 ] ] ] // customer's convenient area - we need to know whether it's within the area being covered by any of the "consumer" spots designated in a certain route
+             coordinates: [ [ [ 0, 0 ], [ 3, 6 ], [ 6, 1 ], [ 0, 0 ] ] ] 
           }
        }
      }

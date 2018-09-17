@@ -4,15 +4,15 @@ networks:
         driver: bridge
         ipam:
             config:
-                - subnet: 10.10.0.0/28
-                  gateway: 10.10.0.1
+                - subnet: 20.10.0.0/28
+                  gateway: 20.10.0.1
 services:
     inv01data:
         image: 'cassandra:2'
         container_name: inv01data
         networks:
             cassnet:
-                ipv4_address: 10.10.0.2
+                ipv4_address: 20.10.0.2
         ports:
             - 9042:9042
             - 7199:7199
@@ -21,7 +21,7 @@ services:
         container_name: inv02data
         networks:
             cassnet:
-                ipv4_address: 10.10.0.3
+                ipv4_address: 20.10.0.3
         ports: 
             - 9142:9042
         links:
@@ -35,7 +35,7 @@ services:
         container_name: inv03data
         networks:
             cassnet:
-                ipv4_address: 10.10.0.4
+                ipv4_address: 20.10.0.4
         ports: 
             - 9242:9042
         links:

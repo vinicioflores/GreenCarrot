@@ -1,132 +1,145 @@
-version: '2'
+version: "3.5"
 networks:
-    clustnet:
+    mongonet:
         driver: bridge
         ipam:
+            driver: default
             config:
-                - subnet: 10.0.0.0/28
-                  gateway: 10.0.0.1
+                - subnet: 105.0.0.0/16
+    cassandranet:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 110.10.0.0/16
+    nodejsnet:
+        driver: bridge
+        ipam:
+            driver: default
+            config: 
+                - subnet: 115.100.0.0/16
+
 services:
     config01:
         image: mongo
-        command: 'mongod --port 27017 --configsvr --replSet configserver --dbpath /data/configdb'
+        container_name: config01
+        command: mongod --port 27017 --configsvr --replSet configserver --dbpath /data/configdb
         ports: 
-            - '27017:27017'
+            - "27017:27017"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.2
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     config02:
         image: mongo
-        command: 'mongod --port 27018 --configsvr --replSet configserver --dbpath /data/configdb'
+        container_name: config02
+        command: mongod --port 27018 --configsvr --replSet configserver --dbpath /data/configdb
         ports:
-            - '27018:27018'
+            - "27018:27018"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.3
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     sj01:
         image: mongo
-        command: 'mongod --port 27019 --shardsvr --replSet repsanjose --dbpath /data/db'
+        container_name: sj01
+        command: mongod --port 27019 --shardsvr --replSet repsanjose --dbpath /data/db
         ports:
-            - '27019:27019'
+            - "27019:27019"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.4
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     sj02:
         image: mongo
-        command: 'mongod --port 27020 --shardsvr --replSet repsanjose --dbpath /data/db'
+        container_name: sj02
+        command: mongod --port 27020 --shardsvr --replSet repsanjose --dbpath /data/db
         ports:
-            - '27020:27020'
+            - "27020:27020"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.5
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     ca01:
         image: mongo
-        command: 'mongod --port 27021 --shardsvr --replSet repcartago  --dbpath /data/db'
+        container_name: ca01
+        command: mongod --port 27021 --shardsvr --replSet repcartago  --dbpath /data/db
         ports:
-            - '27021:27021'
+            - "27021:27021"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.6
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     ca02:
         image: mongo
-        command: 'mongod --port 27022 --shardsvr --replSet repcartago  --dbpath /data/db'
+        container_name: ca02
+        command: mongod --port 27022 --shardsvr --replSet repcartago  --dbpath /data/db
         ports:
-            - '27022:27022'
+            - "27022:27022"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.7
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     al01:
         image: mongo
-        command: 'mongod --port 27023 --shardsvr --replSet repalajuela  --dbpath /data/db'
+        container_name: al01
+        command: mongod --port 27023 --shardsvr --replSet repalajuela  --dbpath /data/db
         ports:
-            - '27023:27023'
+            - "27023:27023"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.8
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     al02:
         image: mongo
-        command: 'mongod --port 27024 --shardsvr --replSet repalajuela  --dbpath /data/db'
+        container_name: al02
+        command: mongod --port 27024 --shardsvr --replSet repalajuela  --dbpath /data/db
         ports:
-            - '27024:27024'
+            - "27024:27024"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.9
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     arb01sj:
         image: mongo
-        command: 'mongod --port 27025 --replSet repsanjose  --dbpath /data/db'
+        container_name: arb01sj
+        command: mongod --port 27025 --replSet repsanjose  --dbpath /data/db
         ports:
-            - '27025:27025'
+            - "27025:27025"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.10
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     arb01ca:
         image: mongo
-        command: 'mongod --port 27026  --replSet repcartago  --dbpath /data/db'
+        container_name: arb01ca
+        command: mongod --port 27026  --replSet repcartago  --dbpath /data/db
         ports:
-            - '27026:27026'
+            - "27026:27026"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.11
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     arb01al:
         image: mongo
-        command: 'mongod --port 27027  --replSet repalajuela  --dbpath /data/db'
+        container_name: arb01al
+        command: mongod --port 27027  --replSet repalajuela  --dbpath /data/db
         ports:
-            - '27027:27027'
+            - "27027:27027"
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.12
+            - mongonet
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
     router01:
         image: mongo
-        command: 'mongos --port 27028 --bind_ip 10.0.0.13 --configdb configserver/config01:27017,config02:27018'
+        container_name: router01
+        command: mongos --port 27028  --configdb configserver/config01:27017,config02:27018
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.13
+            - mongonet
         ports:
-            - '27028:27028'
+            - "27028:27028"
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
         depends_on:
             - config01
             - config02
@@ -138,14 +151,14 @@ services:
             - al02
     router02:
         image: mongo
-        command: 'mongos --port 27029 --bind_ip 10.0.0.14 --configdb configserver/config01:27017,config02:27018'
+        container_name: router02
+        command: mongos --port 27029 --configdb configserver/config01:27017,config02:27018
         networks:
-            clustnet:
-                ipv4_address: 10.0.0.14
+            - mongonet
         ports:
-            - '27029:27029'
+            - "27029:27029"
         volumes:
-            - './scripts:/scripts'
+            - "./scripts:/scripts"
         depends_on:
             - config01
             - config02
@@ -155,3 +168,61 @@ services:
             - ca02
             - al01
             - al02
+    inv01data:
+        image: 'cassandra:2'
+        container_name: inv01data
+        networks:
+            - cassandranet
+        ports:
+            - "9042:9042"
+            - "7199:7199"
+    inv02data:
+        image: 'cassandra:2'
+        container_name: inv02data
+        networks:
+            - cassandranet
+        ports: 
+            - "9142:9042"
+        links:
+            - inv01data:seed
+        environment:
+            - CASSANDRA_SEEDS=seed
+        depends_on:
+            - inv01data
+    inv03data:
+        image: 'cassandra:2'
+        container_name: inv03data
+        networks:
+            - cassandranet
+        ports: 
+            - "9242:9042"
+        links:
+            - inv01data:seed
+        environment:
+            - CASSANDRA_SEEDS=seed
+        depends_on:
+            - inv01data
+            - inv02data
+    nodejs_execution_flow:
+        image: viniciof1211/green-carrot-exec-flow
+        container_name: nodejs_execution_flow
+        build: ../../app/
+        networks:
+            - mongonet
+            - cassandranet
+            - nodejsnet
+        ports:
+            - "4020:3000"
+    nodejs_execution_flow_debug:
+        image: viniciof1211/green-carrot-exec-flow
+        container_name: nodejs_execution_flow_debug
+        build: ../../app/
+        command: npm run debug
+        networks:
+            - mongonet
+            - cassandranet
+            - nodejsnet
+        ports:
+            - "9015:9229"
+            - "4035:3000"
+        

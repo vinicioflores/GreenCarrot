@@ -18,7 +18,6 @@ COPY . /usr/src/app/
 
 EXPOSE 3000
 
-ENTRYPOINT ["/usr/src/app/"]
 CMD [ "npm", "start" ]
 
 
