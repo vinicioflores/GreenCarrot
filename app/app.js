@@ -1,3 +1,4 @@
+"use strict";
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -23,22 +24,26 @@ var db = monk('router01:27028/GreenCarrotRutasDB');
 
 
 // to connect to Cassandra
-var cassandra = require('cassandra-driver');
+const cassandra = require('cassandra-driver');
 var async = require('async');
-var client = new cassandra.Client({contactPoints: ['inv01data'],protocolOptions: { port: 9042 }, keyspace: 'greencarrotinventoryreplicationstrategy'});
+const client = new cassandra.Client({contactPoints: ['inv01data'],keyspace: 'greencarrotinventoryreplicationstrategy'});
 
 client.on('log', function(level, className, message, furtherInfo) {
   console.log('log event: %s -- %s', level, message);
 });
 
-client.connect(function (err, result) {
-    if(err) {
-        console.error('There was an error when connecting', err);
-        return client.shutdown();
-    }
+client.connect()
+  .then(function () {
     console.log('Connected to cluster with %d host(s): %j', client.hosts.length, client.hosts.keys());
     console.log('Keyspaces: %j', Object.keys(client.metadata.keyspaces));
+  })
+  .catch(function (err) {
+    console.error('There was an error when connecting', err);
+    return client.shutdown();
   });
+
+
+
 
 var indexRouter = require('./routes/index');
 var routesRouter = require('./routes/routes');
@@ -127,7 +132,10 @@ var lastLen = 0;
 var datalen = 0;
 
 for(;;){
-    //console.log("Polling for any new orders ....");
+    if(client.connected)
+        console.log("Polling for any new orders ....");
+    else
+        console.warn("Client is not connected yet ...");
     
     // listen to cassandra - unfortunately there was no event listening implemented in datastax cassandra driver - so the dirty way!
     client.execute("SELECT COUNT(*) FROM items_ordered_to_deliver_to_consumers WHERE partition_for_polling = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47",
@@ -165,7 +173,7 @@ for(;;){
 
 
 
-
+ client.shutdown();
 
 
 module.exports = app;
