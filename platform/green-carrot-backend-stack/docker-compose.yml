@@ -169,7 +169,7 @@ services:
             - al01
             - al02
     inv01data:
-        image: 'cassandra:2'
+        image: 'cassandra:3'
         container_name: inv01data
         networks:
             - cassandranet
@@ -177,7 +177,7 @@ services:
             - "9042:9042"
             - "7199:7199"
     inv02data:
-        image: 'cassandra:2'
+        image: 'cassandra:3'
         container_name: inv02data
         networks:
             - cassandranet
@@ -190,7 +190,7 @@ services:
         depends_on:
             - inv01data
     inv03data:
-        image: 'cassandra:2'
+        image: 'cassandra:3'
         container_name: inv03data
         networks:
             - cassandranet
