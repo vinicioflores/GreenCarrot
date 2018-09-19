@@ -133,7 +133,7 @@ services:
     router01:
         image: mongo
         container_name: router01
-        command: mongos --port 27028  --configdb configserver/config01:27017,config02:27018
+        command: mongos --port 27028  --configdb configserver/config01:27017,config02:27018 --bind_ip router01
         networks:
             - mongonet
         ports:
@@ -152,7 +152,7 @@ services:
     router02:
         image: mongo
         container_name: router02
-        command: mongos --port 27029 --configdb configserver/config01:27017,config02:27018
+        command: mongos --port 27029 --configdb configserver/config01:27017,config02:27018 --bind_ip router02
         networks:
             - mongonet
         ports:

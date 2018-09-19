@@ -123,3 +123,6 @@ CREATE TABLE payment_methods (
 	PRIMARY KEY (methodid, methodname)
 );
 
+
+
+
