@@ -10,8 +10,6 @@ ADD . /usr/src/app
 # Install any needed packages specified in requirements.txt
 RUN pip install --trusted-host pypi.python.org -r requirements.txt --proxy http://proxy-chain.intel.com:911
 
-RUN virtualenv venv
-RUN venv\Scripts\activate
 
 # Run app.py when the container launches
 CMD ["python", "app.py"]

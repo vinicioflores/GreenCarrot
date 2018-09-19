@@ -1,3 +1,2 @@
 cassandra-driver
-pymongo
-virtualenv 
+pymongo 
