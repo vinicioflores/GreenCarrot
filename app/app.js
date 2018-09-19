@@ -24,9 +24,10 @@ var db = monk('router01:27028/GreenCarrotRutasDB');
 
 
 // to connect to Cassandra
-const cassandra = require('cassandra-driver');
+const cassandra = require('dse-driver');
 var async = require('async');
-const client = new cassandra.Client({contactPoints: ['110.10.0.3:9042','110.10.0.5:9042','110.10.0.6:9042'],keyspace: 'greencarrotinventoryreplicationstrategy'});
+const client = new cassandra.Client({contactPoints: ['127.0.0.1:9042','127.0.0.1:9142','127.0.0.1:9242'],keyspace: 'greencarrotinventoryreplicationstrategy'});
+//const client = new cassandra.Client({contactPoints: ['110.10.0.9','110.10.0.10','110.10.0.11'],keyspace: 'greencarrotinventoryreplicationstrategy'});
 
 console.log('Connected to cluster with %d host(s): %j', client.hosts.length, client.hosts.keys());
 console.log('Keyspaces: %j', Object.keys(client.metadata.keyspaces));
@@ -49,9 +50,18 @@ client.connect()
   });
 
 
+client.connect(function (err) {
+  assert.ifError(err);
+});
+
 console.log('Connected to cluster with %d host(s): %j', client.hosts.length, client.hosts.keys());
 console.log('Keyspaces: %j', Object.keys(client.metadata.keyspaces));
 
+const state = client.getState();
+for (let host of state.getConnectedHosts()) {
+  console.log('Host %s: open connections = %d; in flight queries = %d',
+    host.address, state.getOpenConnections(host), state.getInFlightQueries(host));
+}
 
 var indexRouter = require('./routes/index');
 var routesRouter = require('./routes/routes');
@@ -140,6 +150,18 @@ var lastLen = 0;
 var datalen = 0;
 
 for(;;){
+    
+    
+client.connect()
+  .then(function () {
+    console.log('Connected to cluster with %d host(s): %j', client.hosts.length, client.hosts.keys());
+    console.log('Keyspaces: %j', Object.keys(client.metadata.keyspaces));
+  })
+  .catch(function (err) {
+    console.error('There was an error when connecting', err);
+    return client.shutdown();
+  });
+
  /*   if(client.connected)
         console.log("Polling for any new orders ....");
     else

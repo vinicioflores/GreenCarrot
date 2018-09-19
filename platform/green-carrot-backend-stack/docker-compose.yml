@@ -169,37 +169,44 @@ services:
             - al01
             - al02
     inv01data:
-        image: 'cassandra:3'
+        image: 'cassandra:2'
         container_name: inv01data
         networks:
-            - cassandranet
+            cassandranet:
+                ipv4_address: '110.10.0.9'
+        environment:
+            - CASSANDRA_START_RPC=true
         ports:
             - "9042:9042"
             - "7199:7199"
     inv02data:
-        image: 'cassandra:3'
+        image: 'cassandra:2'
         container_name: inv02data
         networks:
-            - cassandranet
+            cassandranet:
+                ipv4_address: '110.10.0.10'
         ports: 
             - "9142:9042"
         links:
             - inv01data:seed
         environment:
             - CASSANDRA_SEEDS=seed
+            - CASSANDRA_START_RPC=true
         depends_on:
             - inv01data
     inv03data:
-        image: 'cassandra:3'
+        image: 'cassandra:2'
         container_name: inv03data
         networks:
-            - cassandranet
+            cassandranet:
+                ipv4_address: '110.10.0.11'
         ports: 
             - "9242:9042"
         links:
             - inv01data:seed
         environment:
             - CASSANDRA_SEEDS=seed
+            - CASSANDRA_START_RPC=true
         depends_on:
             - inv01data
             - inv02data
@@ -225,4 +232,11 @@ services:
         ports:
             - "9015:9229"
             - "4035:3000"
-        
+    python_execution_flow:
+        image: viniciof1211/green-carrot-exec-flow-python
+        container_name: python_execution_flow
+        build: ../../app/python_exec/
+        networks:
+          - nodejsnet
+          - mongonet
+          - cassandranet

@@ -1,7 +1,7 @@
 CREATE KEYSPACE GreenCarrotInventoryReplicationStrategy
 WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 3};
 
-USE GreenCarrotInventoryReplicationStrategy;
+USE greencarrotinventoryreplicationstrategy;
 
 
 // damaged good, stolen, returned ...

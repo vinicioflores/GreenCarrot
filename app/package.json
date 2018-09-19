@@ -20,7 +20,7 @@
     "morgan": "~1.9.0",
     "tedious": "~2.6.4",
     "cassandra-driver": "~3.5.0",
-    "express-cassandra": "~2.2.3",
+    "dse-driver": "~1.6.0",
     "async": "~2.6.1"
   }
 }
