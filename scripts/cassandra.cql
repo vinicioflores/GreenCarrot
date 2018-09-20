@@ -17,6 +17,8 @@ VALUES    (uuid(), 'Delivery', 'Delivery of a product to consumer client'),
 		  (uuid(), 'Acquisition', 'Incorporation of new product to inventory by a provider/seller');
 
 
+INSERT INTO movements_types (movementid,movname,description)
+VALUES  (uuid(), 'Acquisition', 'Incorporation of new product to inventory by a provider/seller');
 
 // from web site, phone call, face to face, bill's signature, et c ...
 CREATE TABLE confirmation_methods (
@@ -27,6 +29,8 @@ CREATE TABLE confirmation_methods (
 )
 WITH CLUSTERING ORDER BY (name DESC);
 
+INSERT INTO confirmation_methods(methodid,name,description)
+VALUES (uuid(), 'Manual bill signature', 'Signed the recept by hand');
 
 CREATE TABLE product_families (
 	familyid 	    uuid,
@@ -60,7 +64,15 @@ CREATE TABLE items_movements (
 ) WITH CLUSTERING ORDER BY (updatetime DESC);
 
 
- 
+ INSERT INTO items_movements(movementid,productid,productname,producttype,truck,routename,stopName,latitude,longitude,updatetime,movement_type,damaged_article,stolen_article,stakeholder_involved,    receipt_or_sale_confirmed_by_stakeholder,receipt_or_sale_confirmation_method, cost)
+ VALUES(uuid(), 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, 'Botas rojas vaqueras', 'Clothes', 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, 'Estudiantes', 'UCR',34.4,-23.3,dateof(now()),bb0aacfb-e040-4e18-a2ae-3ca9995f76a1,false,false,'viniciof',true, 4275bae2-308e-4aea-9a57-d4517a9dc868, 35000.0);
+
+
+
+ INSERT INTO items_movements(movementid,productid,productname,producttype,truck,routename,stopName,latitude,longitude,updatetime,movement_type,damaged_article,stolen_article,stakeholder_involved,    receipt_or_sale_confirmed_by_stakeholder,receipt_or_sale_confirmation_method, cost)
+ VALUES(uuid(), 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, 'Botas rojas sexys', 'Clothes', 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47, 'Estudiantes', 'UCR',34.4,-23.3,dateof(now()),bb0aacfb-e040-4e18-a2ae-3ca9995f76a1,false,false,'alvivar',true, 4275bae2-308e-4aea-9a57-d4517a9dc868, 35000.0);
+
+
 
 
 // this table will behave as a summary/catalog being directly impacted by the items movements in table above (master-details design pattern)
@@ -81,6 +93,16 @@ CREATE TABLE inventory_per_truck (
 	still_in_truck_not_delivered boolean, // true: delivery related values above will be null
 	PRIMARY KEY (truck, productid, productname, producttype)
 );
+
+SELECT existence_no 
+            FROM inventory_per_truck_existence_counter
+            WHERE productid = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47 and truck = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47 
+            and producttype = 'Clothes' and productname='Botas rojas sexys';
+
+UPDATE inventory_per_truck_existence_counter 
+SET  existence_no = existence_no + 19
+WHERE productid = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47 and truck = 6ab09bec-e68e-48d9-a5f8-97e6fb4c9b47 
+            and producttype = 'Clothes' and productname='Botas rojas sexys';
 
 UPDATE inventory_per_truck_existence_counter 
 SET  existence_no = existence_no -1 
