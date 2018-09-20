@@ -19,9 +19,16 @@ db.createCollection("trucks")
 db.trucks.insert({
 	truckid: ObjectId("507f191e810c19729de860ea"),
 	name: "greenCarrot01", 
-	,lastKnownOrderPositionInRoute: 1,
+	lastKnownOrderPositionInRoute: 1,
 	assignedRoute: "Estudiantes"
 })
+
+
+
+db.trucks.insert({
+
+})
+
 
 
 db.createCollection("acquisitions")

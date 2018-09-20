@@ -56,22 +56,43 @@ CREATE TABLE items_movements (
 	receipt_or_sale_confirmation_method       uuid,
 	cost               	decimal,
 		
-	PRIMARY KEY ((truck,routename), producttype)	
-) WITH CLUSTERING ORDER BY (producttype ASC);
+	PRIMARY KEY (receipt_or_sale_confirmed_by_stakeholder, updatetime)	
+) WITH CLUSTERING ORDER BY (updatetime DESC);
 
+
+ 
 
 
 // this table will behave as a summary/catalog being directly impacted by the items movements in table above (master-details design pattern)
+CREATE TABLE inventory_per_truck_existence_counter (
+	truck 	uuid,
+	productid 	uuid,
+	productname text,
+	producttype text,
+	existence_no  counter, //amount of existences of the article within the truck in question
+	PRIMARY KEY (truck, productid, productname, producttype)
+);
+
 CREATE TABLE inventory_per_truck (
 	truck 	uuid,
 	productid 	uuid,
 	productname text,
 	producttype text,
-	existence_no  int, //amount of existences of the article within the truck in question
 	still_in_truck_not_delivered boolean, // true: delivery related values above will be null
-	PRIMARY KEY ((truck, productid), productname)
+	PRIMARY KEY (truck, productid, productname, producttype)
 );
 
+UPDATE inventory_per_truck_existence_counter 
+SET  existence_no = existence_no -1 
+WHERE productid = uuid() and truck = uuid() and producttype = 'sss' and productname='zyx';
+
+SELECT existence_no 
+FROM inventory_per_truck_existence_counter
+WHERE productid = uuid() and truck = uuid() and producttype = 'sss' and productname='zyx';
+
+UPDATE inventory_per_truck 
+SET still_in_truck_not_delivered = false
+WHERE productid = uuid() and truck = uuid() and producttype = 'sss' and productname='zyx';
 
 
 CREATE TABLE items_ordered_to_deliver_to_consumers (
